@@ -3,8 +3,10 @@
 #include <conio.h>
 
 #define SLEEP_TIME 2000
+
 #define GAME_AREA_HEIGHT 20
 #define GAME_AREA_WIDTH 10
+#define GAME_AREA_EDGE '+'
 
 void sleep(int millisecond)
 {
@@ -19,18 +21,18 @@ void ClearGameArea(char* gameArea, int height, int width)
 
 	for (w = 0; w < width; ++w)
 	{
-		*(gameArea + w) = '+';
-		*(gameArea + (height - 1) * width + w) = '+';
+		*(gameArea + w) = GAME_AREA_EDGE;
+		*(gameArea + (height - 1) * width + w) = GAME_AREA_EDGE;
 	}
 
 	for (h = 1; h < height - 1; ++h)
 	{
-		*(gameArea + h * width) = '+';
+		*(gameArea + h * width) = GAME_AREA_EDGE;
 		for (w = 1; w < width - 1; ++w)
 		{
 			*(gameArea + h * width + w) = ' ';
 		}
-		*(gameArea + h * width + w) = '+';
+		*(gameArea + h * width + w) = GAME_AREA_EDGE;
 	}
 }
 
@@ -48,17 +50,18 @@ void PrintGameArea(char* gameArea, int height, int width)
 
 int main(void)
 {
-	int i = 0; // for test
-
 	char gameArea[GAME_AREA_HEIGHT + 2][GAME_AREA_WIDTH + 2];
 
 	while (1)
 	{
 		ClearGameArea(&gameArea, GAME_AREA_HEIGHT + 2, GAME_AREA_WIDTH + 2);
-		PrintGameArea(&gameArea, GAME_AREA_HEIGHT + 2, GAME_AREA_WIDTH + 2);
+
+
 
 		sleep(SLEEP_TIME);
 		system("cls || clear");
+		
+		PrintGameArea(&gameArea, GAME_AREA_HEIGHT + 2, GAME_AREA_WIDTH + 2);
 	}
 
 	return 0;

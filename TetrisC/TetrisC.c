@@ -1,4 +1,6 @@
 ﻿#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <conio.h>
 
@@ -21,14 +23,11 @@ void ClearGameArea(char* gameArea, int height, int width)
 {
 	for (int h = 0; h < height; ++h)
 	{
-		for (int w = 0; w < width; ++w)
-		{
-			*(gameArea + h * width + w) = ' ';
-		}
+		memset(gameArea + h * width, ' ', width);
 	}
 }
 
-void PrintGameArea(char* gameArea, int height, int width)
+void PrintGameArea(char* gameArea, char* blockStack[], int height, int width)
 {
 	for (int i = 0; i < width + 2; ++i)
 	{
@@ -41,6 +40,11 @@ void PrintGameArea(char* gameArea, int height, int width)
 		printf("%c", GAME_AREA_EDGE);
 		for (int w = 0; w < width; ++w)
 		{
+			if (*(blockStack[h] + w) != ' ')
+			{
+				*(gameArea + h * width + w) = *(blockStack[h] + w);
+			}
+			
 			printf("%c", *(gameArea + h * width + w));
 		}
 		printf("%c\n", GAME_AREA_EDGE);
@@ -74,10 +78,23 @@ void DrawBlock(char* gameArea, int height, int width, char* block, int blockHeig
 int main(void)
 {
 	char gameArea[GAME_AREA_HEIGHT][GAME_AREA_WIDTH];
+	char* blockStack[GAME_AREA_HEIGHT];
 
 	char block[4] = { BLOCK, BLOCK, BLOCK, BLOCK };
 
 	int y = 0, x = 0;
+
+	// init blockStack
+	for (int i = 0; i < GAME_AREA_HEIGHT; ++i)
+	{
+		blockStack[i] = (char*)malloc(GAME_AREA_WIDTH * sizeof(char));
+		if (blockStack[i] == NULL)
+		{
+			exit(EXIT_FAILURE);
+		}
+
+		memset(blockStack[i], ' ', GAME_AREA_WIDTH * sizeof(char));
+	}
 
 	while (1)
 	{
@@ -88,7 +105,7 @@ int main(void)
 		sleep(SLEEP_TIME);
 		system("cls || clear");
 		
-		PrintGameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH);
+		PrintGameArea(gameArea, blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH);
 	}
 
 	return 0;

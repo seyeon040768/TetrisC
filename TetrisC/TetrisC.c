@@ -7,13 +7,16 @@
 #include "GameArea.h"
 #include "BlockStack.h"
 
-#define SLEEP_TIME 200
+#define SLEEP_TIME 20
 
 #define GAME_AREA_HEIGHT 20
 #define GAME_AREA_WIDTH 10
 #define GAME_AREA_EDGE '+'
 
 #define BLOCK '#'
+
+// top is 0
+#define GAME_END_HEIGHT 1
 
 void sleep(int millisecond)
 {
@@ -31,7 +34,7 @@ int main(void)
 
 	int y = 0, x = 0;
 
-	while (1)
+	while (!CheckGameEnded(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, GAME_END_HEIGHT))
 	{
 		ClearGameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH);
 
@@ -52,6 +55,8 @@ int main(void)
 		
 		PrintGameArea(gameArea, blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, GAME_AREA_EDGE);
 	}
+
+	printf("Game Over!\n");
 
 	return 0;
 }

@@ -59,3 +59,25 @@ void AddBlock2Stack(char** blockStack, int height, int width, char* block, int b
 		}
 	}
 }
+
+int CheckGameEnded(char** blockStack, int height, int width, int endedHeight)
+{
+	if (endedHeight < 0)
+	{
+		endedHeight = 0;
+	}
+	else if (endedHeight > height - 1)
+	{
+		endedHeight = height - 1;
+	}
+
+	for (int w = 0; w < width; ++w)
+	{
+		if (*(*(blockStack + endedHeight) + w) != ' ')
+		{
+			return 1;
+		}
+	}
+
+	return 0;
+}

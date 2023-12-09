@@ -35,7 +35,12 @@ int main(void)
 	{
 		ClearGameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH);
 
-		DrawFallingBlock2GameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y++, 0);
+		if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y + 1, 0))
+		{
+			++y;
+		}
+
+		DrawFallingBlock2GameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y, 0);
 
 		sleep(SLEEP_TIME);
 		system("cls || clear");

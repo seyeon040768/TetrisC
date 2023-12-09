@@ -24,3 +24,24 @@ char** InitBlockStack(int height, int width)
 
 	return blockStack;
 }
+
+int CheckBlockOverlap(char** blockStack, int height, int width, char* block, int blockHeight, int blockWidth, int y, int x)
+{
+	if (y < 0 || y + blockHeight > height || x < 0 || x + blockWidth > width)
+	{
+		return 1;
+	}
+
+	for (int h = 0; h < blockHeight; ++h)
+	{
+		for (int w = 0; w < blockWidth; ++w)
+		{
+			if (*(block + (y + h) * blockWidth + x + w) != ' ' && *(*(blockStack + y + h) + x + w) != ' ')
+			{
+				return 1;
+			}
+		}
+	}
+
+	return 0;
+}

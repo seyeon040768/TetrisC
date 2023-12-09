@@ -127,7 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BlockStack.c" />
+    <ClCompile Include="GameArea.c" />
     <ClCompile Include="TetrisC.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BlockStack.h" />
+    <ClInclude Include="GameArea.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

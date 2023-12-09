@@ -7,7 +7,7 @@
 #include "GameArea.h"
 #include "BlockStack.h"
 
-#define SLEEP_TIME 1000
+#define SLEEP_TIME 200
 
 #define GAME_AREA_HEIGHT 20
 #define GAME_AREA_WIDTH 10
@@ -35,12 +35,17 @@ int main(void)
 	{
 		ClearGameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH);
 
-		if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y + 1, 0))
+		if (CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y + 1, 0))
 		{
-			++y;
+			AddBlock2Stack(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y, 0);
+
+			y = 0;
+		}
+		else
+		{
+			DrawFallingBlock2GameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y++, 0);
 		}
 
-		DrawFallingBlock2GameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y, 0);
 
 		sleep(SLEEP_TIME);
 		system("cls || clear");

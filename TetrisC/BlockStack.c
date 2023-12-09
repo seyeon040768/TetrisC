@@ -36,7 +36,7 @@ int CheckBlockOverlap(char** blockStack, int height, int width, char* block, int
 	{
 		for (int w = 0; w < blockWidth; ++w)
 		{
-			if (*(block + (y + h) * blockWidth + x + w) != ' ' && *(*(blockStack + y + h) + x + w) != ' ')
+			if (*(block + h * blockWidth + w) != ' ' && *(*(blockStack + y + h) + x + w) != ' ')
 			{
 				return 1;
 			}
@@ -44,4 +44,18 @@ int CheckBlockOverlap(char** blockStack, int height, int width, char* block, int
 	}
 
 	return 0;
+}
+
+void AddBlock2Stack(char** blockStack, int height, int width, char* block, int blockHeight, int blockWidth, int y, int x)
+{
+	for (int h = 0; h < blockHeight; ++h)
+	{
+		for (int w = 0; w < blockWidth; ++w)
+		{
+			if (*(block + h * blockWidth + w) != ' ')
+			{
+				*(*(blockStack + y + h) + x + w) = *(block + h * blockWidth + w);
+			}
+		}
+	}
 }

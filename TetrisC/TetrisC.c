@@ -7,7 +7,7 @@
 #include "GameArea.h"
 #include "BlockStack.h"
 
-#define SLEEP_TIME 20
+#define SLEEP_TIME 1000
 
 #define GAME_AREA_HEIGHT 20
 #define GAME_AREA_WIDTH 10
@@ -15,20 +15,25 @@
 
 #define BLOCK '#'
 
+#define LEFT 75
+#define RIGHT 77
+#define UP 72
+#define DOWN 80
+
 // top is 0
 #define GAME_END_HEIGHT 1
 
-void sleep(int millisecond)
-{
-	clock_t startTime = clock();
-
-	while (clock() < startTime + millisecond);
-}
-
 int main(void)
 {
+	int refreshScreen = 0;
+
+	clock_t startTime = clock();
+
 	char** gameArea = InitGameArea(GAME_AREA_HEIGHT, GAME_AREA_WIDTH);
 	char** blockStack = InitBlockStack(GAME_AREA_HEIGHT, GAME_AREA_WIDTH);
+	char input;
+
+	int speed = 1;
 
 	char block[4] = { BLOCK, BLOCK, BLOCK, BLOCK };
 
@@ -38,22 +43,72 @@ int main(void)
 	{
 		ClearGameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH);
 
-		if (CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y + 1, 0))
+		if (_kbhit())
 		{
-			AddBlock2Stack(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y, 0);
+			input = _getch();
+			if (input == -32)
+			{
+				input = _getch();
+				switch (input)
+				{
+				case LEFT:
+					if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y, x - 1))
+					{
+						--x;
 
-			y = 0;
+						refreshScreen = 1;
+					}
+					break;
+				case RIGHT:
+					if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y, x + 1))
+					{
+						++x;
+
+						refreshScreen = 1;
+					}
+					break;
+				case UP:
+
+					break;
+				case DOWN:
+					speed = 20;
+					break;
+				}
+			}
 		}
 		else
 		{
-			DrawFallingBlock2GameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y++, 0);
+			speed = 1;
 		}
 
+		if (clock() - startTime > SLEEP_TIME / speed)
+		{
+			startTime = clock();
 
-		sleep(SLEEP_TIME);
-		system("cls || clear");
-		
-		PrintGameArea(gameArea, blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, GAME_AREA_EDGE);
+			if (CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y + 1, x))
+			{
+				AddBlock2Stack(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y, x);
+
+				y = 0;
+			}
+			else
+			{
+				++y;
+			}
+
+			refreshScreen = 1;
+		}
+
+		if (refreshScreen)
+		{
+			refreshScreen = 0;
+
+			DrawFallingBlock2GameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y, x);
+
+			system("cls || clear");
+
+			PrintGameArea(gameArea, blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, GAME_AREA_EDGE);
+		}
 	}
 
 	printf("Game Over!\n");

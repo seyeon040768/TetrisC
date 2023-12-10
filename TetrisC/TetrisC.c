@@ -90,6 +90,8 @@ int main(void)
 				AddBlock2Stack(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 2, 2, y, x);
 
 				y = 0;
+
+				RemoveFullLine(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH);
 			}
 			else
 			{

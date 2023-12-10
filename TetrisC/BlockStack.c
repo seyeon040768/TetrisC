@@ -70,6 +70,55 @@ void AddBlock2Stack(char** blockStack, int height, int width, char* block, int b
 	}
 }
 
+void RemoveLine(char** blockStack, int height, int line)
+{
+	if (line < 0 || line > height - 1)
+	{
+		return;
+	}
+
+	free(*(blockStack + line));
+
+	*(blockStack + line) = NULL;
+}
+
+void RemoveFullLine(char** blockStack, int height, int width)
+{
+	int isLineFull = 1;
+	for (int h = height - 1; h >= 0; --h)
+	{
+		isLineFull = 1;
+		for (int w = 0; w < width; ++w)
+		{
+			if (*(*(blockStack + h) + w) == ' ')
+			{
+				isLineFull = 0;
+				break;
+			}
+		}
+
+		if (isLineFull)
+		{
+			RemoveLine(blockStack, height, h);
+
+			for (int i = h; i > 0; --i)
+			{
+				*(blockStack + i) = *(blockStack + i - 1);
+			}
+
+			*blockStack = (char*)malloc(width * sizeof(char));
+			if (*blockStack == NULL)
+			{
+				exit(EXIT_FAILURE);
+			}
+
+			memset(*(blockStack + h), ' ', width * sizeof(char));
+
+			++h;
+		}
+	}
+}
+
 int CheckGameEnded(char** blockStack, int height, int width, int endedHeight)
 {
 	if (endedHeight < 0)

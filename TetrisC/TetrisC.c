@@ -35,7 +35,7 @@ int main(void)
 
 	int speed = 1;
 
-	char block[4] = { BLOCK, BLOCK, BLOCK, BLOCK };
+	char block[2][2] = { {BLOCK, BLOCK}, {BLOCK, BLOCK} };
 
 	int y = 0, x = 0;
 
@@ -52,7 +52,7 @@ int main(void)
 				switch (input)
 				{
 				case LEFT:
-					if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y, x - 1))
+					if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 2, 2, y, x - 1))
 					{
 						--x;
 
@@ -60,7 +60,7 @@ int main(void)
 					}
 					break;
 				case RIGHT:
-					if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y, x + 1))
+					if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 2, 2, y, x + 1))
 					{
 						++x;
 
@@ -85,9 +85,9 @@ int main(void)
 		{
 			startTime = clock();
 
-			if (CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y + 1, x))
+			if (CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 2, 2, y + 1, x))
 			{
-				AddBlock2Stack(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y, x);
+				AddBlock2Stack(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 2, 2, y, x);
 
 				y = 0;
 			}
@@ -103,13 +103,16 @@ int main(void)
 		{
 			refreshScreen = 0;
 
-			DrawFallingBlock2GameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 1, 4, y, x);
+			DrawFallingBlock2GameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 2, 2, y, x);
 
 			system("cls || clear");
 
 			PrintGameArea(gameArea, blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, GAME_AREA_EDGE);
 		}
 	}
+
+	FreeGameArea(gameArea, GAME_AREA_HEIGHT);
+	FreeBlockStack(blockStack, GAME_AREA_HEIGHT);
 
 	printf("Game Over!\n");
 

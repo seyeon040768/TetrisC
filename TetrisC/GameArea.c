@@ -25,6 +25,16 @@ char** InitGameArea(int height, int width)
 	return gameArea;
 }
 
+void FreeGameArea(char** gameArea, int height)
+{
+	for (int h = 0; h < height; ++h)
+	{
+		free(*(gameArea + h));
+	}
+
+	free(gameArea);
+}
+
 void ClearGameArea(char** gameArea, int height, int width)
 {
 	for (int h = 0; h < height; ++h)

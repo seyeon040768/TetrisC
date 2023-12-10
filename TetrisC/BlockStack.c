@@ -25,6 +25,16 @@ char** InitBlockStack(int height, int width)
 	return blockStack;
 }
 
+void FreeBlockStack(char** blockStack, int height)
+{
+	for (int h = 0; h < height; ++h)
+	{
+		free(*(blockStack + h));
+	}
+
+	free(blockStack);
+}
+
 int CheckBlockOverlap(char** blockStack, int height, int width, char* block, int blockHeight, int blockWidth, int y, int x)
 {
 	if (y < 0 || y + blockHeight > height || x < 0 || x + blockWidth > width)

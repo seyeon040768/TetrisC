@@ -96,6 +96,7 @@ Block Block2Char(BlockInfo blockInfo, char blockChar)
 /// Rotate block 90 degrees clockwise
 /// </summary>
 /// <param name="block">Block pointer</param>
+/// <param name="size">the length of the longest side</param>
 void RotateBlock(char* block, int size)
 {
 	char* temp = (char*)malloc(size * size * sizeof(char));

@@ -114,7 +114,7 @@ void RemoveFullLine(char** blockStack, int height, int width)
 				exit(EXIT_FAILURE);
 			}
 
-			memset(*(blockStack + h), 0, width * sizeof(char));
+			memset(*blockStack, 0, width * sizeof(char));
 
 			++h;
 		}

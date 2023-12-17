@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "Block.h"
+
 char** InitBlockStack(int height, int width)
 {
 	char** blockStack = NULL;
@@ -19,7 +21,7 @@ char** InitBlockStack(int height, int width)
 			exit(EXIT_FAILURE);
 		}
 
-		memset(*(blockStack + h), ' ', width * sizeof(char));
+		memset(*(blockStack + h), 0, width * sizeof(char));
 	}
 
 	return blockStack;
@@ -35,18 +37,18 @@ void FreeBlockStack(char** blockStack, int height)
 	free(blockStack);
 }
 
-int CheckBlockOverlap(char** blockStack, int height, int width, char* block, int blockHeight, int blockWidth, int y, int x)
+int CheckBlockOverlap(char** blockStack, int height, int width, Block block, int y, int x)
 {
-	if (y < 0 || y + blockHeight > height || x < 0 || x + blockWidth > width)
+	if (y < 0 || y + block.height > height || x < 0 || x + block.width > width)
 	{
 		return 1;
 	}
 
-	for (int h = 0; h < blockHeight; ++h)
+	for (int h = 0; h < block.height; ++h)
 	{
-		for (int w = 0; w < blockWidth; ++w)
+		for (int w = 0; w < block.width; ++w)
 		{
-			if (*(block + h * blockWidth + w) != ' ' && *(*(blockStack + y + h) + x + w) != ' ')
+			if (*(block.block + h * block.width + w) && *(*(blockStack + y + h) + x + w))
 			{
 				return 1;
 			}
@@ -56,15 +58,15 @@ int CheckBlockOverlap(char** blockStack, int height, int width, char* block, int
 	return 0;
 }
 
-void AddBlock2Stack(char** blockStack, int height, int width, char* block, int blockHeight, int blockWidth, int y, int x)
+void AddBlock2Stack(char** blockStack, int height, int width, Block block, int y, int x)
 {
-	for (int h = 0; h < blockHeight; ++h)
+	for (int h = 0; h < block.height; ++h)
 	{
-		for (int w = 0; w < blockWidth; ++w)
+		for (int w = 0; w < block.width; ++w)
 		{
-			if (*(block + h * blockWidth + w) != ' ')
+			if (*(block.block + h * block.width + w))
 			{
-				*(*(blockStack + y + h) + x + w) = *(block + h * blockWidth + w);
+				*(*(blockStack + y + h) + x + w) = *(block.block + h * block.width + w);
 			}
 		}
 	}
@@ -90,7 +92,7 @@ void RemoveFullLine(char** blockStack, int height, int width)
 		isLineFull = 1;
 		for (int w = 0; w < width; ++w)
 		{
-			if (*(*(blockStack + h) + w) == ' ')
+			if (!*(*(blockStack + h) + w))
 			{
 				isLineFull = 0;
 				break;
@@ -112,7 +114,7 @@ void RemoveFullLine(char** blockStack, int height, int width)
 				exit(EXIT_FAILURE);
 			}
 
-			memset(*(blockStack + h), ' ', width * sizeof(char));
+			memset(*(blockStack + h), 0, width * sizeof(char));
 
 			++h;
 		}
@@ -132,7 +134,7 @@ int CheckGameEnded(char** blockStack, int height, int width, int endedHeight)
 
 	for (int w = 0; w < width; ++w)
 	{
-		if (*(*(blockStack + endedHeight) + w) != ' ')
+		if (*(*(blockStack + endedHeight) + w))
 		{
 			return 1;
 		}

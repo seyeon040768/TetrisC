@@ -24,12 +24,18 @@
     <ClCompile Include="GameArea.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Block.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BlockStack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameArea.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

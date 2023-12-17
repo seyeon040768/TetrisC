@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "Block.h"
+
 char** InitGameArea(int height, int width)
 {
 	char** gameArea = NULL;
@@ -43,20 +45,23 @@ void ClearGameArea(char** gameArea, int height, int width)
 	}
 }
 
-void DrawFallingBlock2GameArea(char** gameArea, int height, int width, char* block, int blockHeight, int blockWidth, int y, int x)
+void DrawFallingBlock2GameArea(char** gameArea, int height, int width, Block block, int y, int x)
 {
-	if (y < 0 || y + blockHeight > height || x < 0 || x + blockWidth > width)
+	if (y < 0 || y + block.height > height || x < 0 || x + block.width > width)
 	{
 		//
 
 		return;
 	}
 
-	for (int h = 0; h < blockHeight; ++h)
+	for (int h = 0; h < block.height; ++h)
 	{
-		for (int w = 0; w < blockWidth; ++w)
+		for (int w = 0; w < block.width; ++w)
 		{
-			*(*(gameArea + y + h) + x + w) = *(block + h * blockWidth + w);
+			if (*(block.block + h * block.width + w))
+			{
+				*(*(gameArea + y + h) + x + w) = *(block.block + h * block.width + w);
+			}
 		}
 	}
 }
@@ -74,7 +79,7 @@ void PrintGameArea(char** gameArea, char** blockStack, int height, int width, ch
 		printf("%c", edge);
 		for (int w = 0; w < width; ++w)
 		{
-			if (*(*(blockStack + h) + w) != ' ')
+			if (*(*(blockStack + h) + w))
 			{
 				*(*(gameArea + h) + w) = *(*(blockStack + h) + w);
 			}

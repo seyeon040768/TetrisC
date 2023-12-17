@@ -6,6 +6,7 @@
 
 #include "GameArea.h"
 #include "BlockStack.h"
+#include "Block.h"
 
 #define SLEEP_TIME 1000
 
@@ -35,7 +36,7 @@ int main(void)
 
 	int speed = 1;
 
-	char block[2][2] = { {BLOCK, BLOCK}, {BLOCK, BLOCK} };
+	BlockInfo blockInfo = GenerateRandomBlock();
 
 	int y = 0, x = 0;
 
@@ -48,11 +49,12 @@ int main(void)
 			input = _getch();
 			if (input == -32)
 			{
+				Block block = Block2Char(blockInfo, BLOCK);
 				input = _getch();
 				switch (input)
 				{
 				case LEFT:
-					if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 2, 2, y, x - 1))
+					if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, y, x - 1))
 					{
 						--x;
 
@@ -60,7 +62,7 @@ int main(void)
 					}
 					break;
 				case RIGHT:
-					if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 2, 2, y, x + 1))
+					if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, y, x + 1))
 					{
 						++x;
 
@@ -74,6 +76,8 @@ int main(void)
 					speed = 20;
 					break;
 				}
+
+				free(block.block);
 			}
 		}
 		else
@@ -85,18 +89,24 @@ int main(void)
 		{
 			startTime = clock();
 
-			if (CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 2, 2, y + 1, x))
+			Block block = Block2Char(blockInfo, BLOCK);
+
+			if (CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, y + 1, x))
 			{
-				AddBlock2Stack(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 2, 2, y, x);
+				AddBlock2Stack(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, y, x);
 
 				y = 0;
 
 				RemoveFullLine(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH);
+
+				blockInfo = GenerateRandomBlock();
 			}
 			else
 			{
 				++y;
 			}
+
+			free(block.block);
 
 			refreshScreen = 1;
 		}
@@ -105,7 +115,9 @@ int main(void)
 		{
 			refreshScreen = 0;
 
-			DrawFallingBlock2GameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, 2, 2, y, x);
+			Block block = Block2Char(blockInfo, BLOCK);
+			DrawFallingBlock2GameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, y, x);
+			free(block.block);
 
 			system("cls || clear");
 

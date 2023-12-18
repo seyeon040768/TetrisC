@@ -79,7 +79,17 @@ Block Block2Char(BlockInfo blockInfo, char blockChar, int* dy, int* dx)
 	int left = 0, dLeft = 0;
 	int right = 0, dRight = 0;
 
-	
+	if ((dy && dx) && blockInfo.direction == 0)
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			RotateBlock(block.block, blockInfo.size);
+		}
+
+		CropBlock(&block, blockInfo, &top, &bottom, &left, &right);
+
+		RotateBlock(block.block, blockInfo.size);
+	}
 
 	for (int i = 0; i < blockInfo.direction; ++i)
 	{

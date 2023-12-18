@@ -38,7 +38,7 @@ int main(void)
 
 	BlockInfo blockInfo = GenerateRandomBlock();
 
-	int y = 0, x = 0;
+	int y = 0, x = GAME_AREA_WIDTH / 2;
 
 	while (!CheckGameEnded(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, GAME_END_HEIGHT))
 	{
@@ -49,35 +49,62 @@ int main(void)
 			input = _getch();
 			if (input == -32)
 			{
-				Block block = Block2Char(blockInfo, BLOCK);
 				input = _getch();
 				switch (input)
 				{
 				case LEFT:
+				{
+					Block block = Block2Char(blockInfo, BLOCK, NULL, NULL);
+
 					if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, y, x - 1))
 					{
 						--x;
 
 						refreshScreen = 1;
 					}
+
+					free(block.block);
 					break;
+				}
 				case RIGHT:
+				{
+					Block block = Block2Char(blockInfo, BLOCK, NULL, NULL);
+
 					if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, y, x + 1))
 					{
 						++x;
 
 						refreshScreen = 1;
 					}
-					break;
-				case UP:
 
+					free(block.block);
 					break;
+				}
+				case UP:
+				{
+					BlockInfo rotatedBlockInfo = blockInfo;
+					rotatedBlockInfo.direction = (rotatedBlockInfo.direction + 1) % 4;
+
+					int dy = 0, dx = 0;
+					Block block = Block2Char(rotatedBlockInfo, BLOCK, &dy, &dx);
+
+					if (!CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, y + dy, x + dx))
+					{
+						y += dy;
+						x += dx;
+
+						blockInfo = rotatedBlockInfo;
+
+						refreshScreen = 1;
+					}
+
+					free(block.block);
+					break;
+				}
 				case DOWN:
 					speed = 20;
 					break;
 				}
-
-				free(block.block);
 			}
 		}
 		else
@@ -89,13 +116,14 @@ int main(void)
 		{
 			startTime = clock();
 
-			Block block = Block2Char(blockInfo, BLOCK);
+			Block block = Block2Char(blockInfo, BLOCK, NULL, NULL);
 
 			if (CheckBlockOverlap(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, y + 1, x))
 			{
 				AddBlock2Stack(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, y, x);
 
 				y = 0;
+				x = GAME_AREA_WIDTH / 2;
 
 				RemoveFullLine(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH);
 
@@ -115,7 +143,7 @@ int main(void)
 		{
 			refreshScreen = 0;
 
-			Block block = Block2Char(blockInfo, BLOCK);
+			Block block = Block2Char(blockInfo, BLOCK, NULL, NULL);
 			DrawFallingBlock2GameArea(gameArea, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, block, y, x);
 			free(block.block);
 

@@ -28,6 +28,7 @@ typedef struct Block
 } Block;
 
 BlockInfo GenerateRandomBlock();
-Block Block2Char(BlockInfo blockInfo, char blockChar);
+Block Block2Char(BlockInfo blockInfo, char blockChar, int* dy, int* dx);
 void RotateBlock(char* block, int size);
+void CropBlock(const Block* block, BlockInfo blockInfo, int* top, int* bottom, int* left, int* right);
 void MakeTightBlock(Block* block, BlockInfo blockInfo);

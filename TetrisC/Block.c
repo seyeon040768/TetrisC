@@ -29,7 +29,7 @@ BlockInfo GenerateRandomBlock()
 	return blockInfo;
 }
 
-Block Block2Char(BlockInfo blockInfo, char blockChar)
+Block Block2Char(BlockInfo blockInfo, char blockChar, int* dy, int* dx)
 {
 	char straightBlock[] = {
 		0, 1, 0, 0,
@@ -74,9 +74,27 @@ Block Block2Char(BlockInfo blockInfo, char blockChar)
 	block.block = (char*)malloc(blockInfo.size * blockInfo.size * sizeof(char));
 	memcpy(block.block, blocks[blockInfo.blockCode], blockInfo.size * blockInfo.size * sizeof(char));
 
+	int top = 0, dTop = 0;
+	int bottom = 0, dBottom = 0;
+	int left = 0, dLeft = 0;
+	int right = 0, dRight = 0;
+
+	if (dy && dx)
+	{
+		CropBlock(&block, blockInfo, &top, &bottom, &left, &right);
+	}
+
 	for (int i = 0; i < blockInfo.direction; ++i)
 	{
 		RotateBlock(block.block, blockInfo.size);
+	}
+
+	if (dy && dx)
+	{
+		CropBlock(&block, blockInfo, &dTop, &dBottom, &dLeft, &dRight);
+
+		*dy = dTop - top;
+		*dx = dLeft - left;
 	}
 
 	MakeTightBlock(&block, blockInfo);
@@ -118,14 +136,12 @@ void RotateBlock(char* block, int size)
 	free(temp);
 }
 
-void MakeTightBlock(Block* block, BlockInfo blockInfo)
+void CropBlock(const Block* block, BlockInfo blockInfo, int* top, int* bottom, int* left, int* right)
 {
-	char* temp = NULL;
-
-	int top = blockInfo.size - 1;
-	int bottom = 0;
-	int left = blockInfo.size - 1;
-	int right = 0;
+	int tempTop = blockInfo.size - 1;
+	int tempBottom = 0;
+	int tempLeft = blockInfo.size - 1;
+	int tempRight = 0;
 
 	for (int i = 0; i < blockInfo.size; ++i)
 	{
@@ -133,13 +149,30 @@ void MakeTightBlock(Block* block, BlockInfo blockInfo)
 		{
 			if (*(block->block + i * blockInfo.size + j))
 			{
-				top = (i < top) ? i : top;
-				bottom = (i > bottom) ? i : bottom;
-				left = (j < left) ? j : left;
-				right = (j > right) ? j : right;
+				tempTop = (i < tempTop) ? i : tempTop;
+				tempBottom = (i > tempBottom) ? i : tempBottom;
+				tempLeft = (j < tempLeft) ? j : tempLeft;
+				tempRight = (j > tempRight) ? j : tempRight;
 			}
 		}
 	}
+
+	*top = tempTop;
+	*bottom = tempBottom;
+	*left = tempLeft;
+	*right = tempRight;
+}
+
+void MakeTightBlock(Block* block, BlockInfo blockInfo)
+{
+	char* temp = NULL;
+
+	int top = 0;
+	int bottom = 0;
+	int left = 0;
+	int right = 0;
+
+	CropBlock(block, blockInfo, &top, &bottom, &left, &right);
 
 	block->height = bottom - top + 1;
 	block->width = right - left + 1;

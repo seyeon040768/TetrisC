@@ -84,7 +84,7 @@ void RemoveLine(char** blockStack, int height, int line)
 	*(blockStack + line) = NULL;
 }
 
-void RemoveFullLine(char** blockStack, int height, int width)
+void RemoveFullLine(char** blockStack, int height, int width, int* score)
 {
 	int isLineFull = 1;
 	for (int h = height - 1; h >= 0; --h)
@@ -115,6 +115,8 @@ void RemoveFullLine(char** blockStack, int height, int width)
 			}
 
 			memset(*blockStack, 0, width * sizeof(char));
+
+			++(*score);
 
 			++h;
 		}

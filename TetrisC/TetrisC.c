@@ -35,6 +35,7 @@ int main(void)
 	char input;
 
 	int speed = 1;
+	int score = 0;
 
 	BlockInfo blockInfo = GenerateRandomBlock();
 
@@ -125,7 +126,7 @@ int main(void)
 				y = 0;
 				x = GAME_AREA_WIDTH / 2;
 
-				RemoveFullLine(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH);
+				RemoveFullLine(blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, &score);
 
 				blockInfo = GenerateRandomBlock();
 			}
@@ -150,6 +151,8 @@ int main(void)
 			system("cls || clear");
 
 			PrintGameArea(gameArea, blockStack, GAME_AREA_HEIGHT, GAME_AREA_WIDTH, GAME_AREA_EDGE);
+
+			printf("Score: %d\n", score);
 		}
 	}
 
